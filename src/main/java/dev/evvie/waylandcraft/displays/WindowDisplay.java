@@ -11,6 +11,7 @@ import dev.evvie.waylandcraft.bridge.WLCAbstractWindow;
 import dev.evvie.waylandcraft.bridge.WLCSurface;
 import dev.evvie.waylandcraft.bridge.WLCToplevel;
 import dev.evvie.waylandcraft.math.WorldPlane;
+import dev.evvie.waylandcraft.render.CursorRenderer;
 import dev.evvie.waylandcraft.render.RenderUtils;
 import dev.evvie.waylandcraft.utils.WaylandCraftUtils;
 import net.minecraft.client.Camera;
@@ -52,6 +53,11 @@ public class WindowDisplay extends AbstractWindowDisplay {
 	@Override
 	public void renderFramebuffer(PoseStack poseStack, SubmitNodeCollector collector, Vec3 origin, Vec3 spanX, Vec3 spanY) {
 		RenderUtils.renderFramebuffer(window.framebuffer, poseStack, collector, true, origin, spanX, spanY);
+	}
+
+	@Override
+	protected void renderOverlay(PoseStack poseStack, SubmitNodeCollector collector, Vec3 localX, Vec3 localY) {
+		CursorRenderer.renderWorldCursor(poseStack, collector, localX, localY, normal(), window);
 	}
 	
 	@Override
