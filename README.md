@@ -1,3 +1,16 @@
+## Fork notice
+
+This is an unofficial, experimental fork of WaylandCraft.
+
+Most code-changing commits authored by me (YBramkamp) were created with substantial assistance from LLMs. I am not a Rust developer and have very little experience with Wayland, so please review the changes accordingly.
+
+This fork exists because I thought it would be hilarious to play Total War: Warhammer III inside Minecraft. As of August 29, 2026, the parent project does not capture the mouse correctly for many applications ([issue #43](https://github.com/EVV1E/waylandcraft/issues/43)).
+
+This fork changes the Alt+Q capture mode so that it captures mouse movement even for games and applications that do not request pointer locking themselves. It also routes the scroll wheel to the captured application.
+
+That’s it.
+
+# Original Readme:
 ![waylandcraft banner](/assets/title_scaled.png)
 
 Wayland Compositor in Minecraft
