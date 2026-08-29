@@ -36,6 +36,9 @@ public abstract class AbstractWindowDisplay {
 	
 	public abstract void renderFramebuffer(PoseStack poseStack, SubmitNodeCollector collector, Vec3 origin, Vec3 spanX, Vec3 spanY);
 	public abstract @Nullable FramebufferRenderable getFramebuffer();
+
+	protected void renderOverlay(PoseStack poseStack, SubmitNodeCollector collector, Vec3 localX, Vec3 localY) {
+	}
 	
 	public void rotate(Vec3 normal, Vec3 down) {
 		this.normal = normal;
@@ -106,6 +109,7 @@ public abstract class AbstractWindowDisplay {
 		poseStack.pushPose();
 		poseStack.translate(originRel.x, originRel.y, originRel.z);
 		renderFramebuffer(poseStack, ctx.submitNodeCollector(), bufOffset, localX.scale(bufWidth), localY.scale(bufHeight));
+		renderOverlay(poseStack, ctx.submitNodeCollector(), localX, localY);
 		poseStack.popPose();
 	}
 	

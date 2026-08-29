@@ -275,6 +275,18 @@ bind_java_type! {
             sig = (instance: jlong) -> jint,
             fn = cursor_shape,
         },
+        static extern fn cursor_surface {
+            sig = (instance: jlong) -> jlong,
+            fn = cursor_surface,
+        },
+        static extern fn cursor_hotspot_x {
+            sig = (instance: jlong) -> jint,
+            fn = cursor_hotspot_x,
+        },
+        static extern fn cursor_hotspot_y {
+            sig = (instance: jlong) -> jint,
+            fn = cursor_hotspot_y,
+        },
         static extern fn keyboard_focus {
             sig = (instance: jlong, surface_handle: jlong),
             fn = keyboard_focus,
@@ -1279,12 +1291,59 @@ fn cursor_shape<'local>(
 ) -> Result<jint, BridgeError> {
     let instance = jptr_to_instance!(instance, "cursorShape")?;
 
+    if instance.state.seat.cursor_hidden {
+        return Ok(0);
+    }
+
     let shape = match instance.state.seat.cursor_shape {
         Some(shape) => shape as jint,
         None => -1,
     };
 
     Ok(shape)
+}
+
+fn cursor_surface<'local>(
+    _env: &mut Env<'local>,
+    _class: JClass<'local>,
+    instance: jlong,
+) -> Result<jlong, BridgeError> {
+    let instance = jptr_to_instance!(instance, "cursorSurface")?;
+
+    let cursor_surface = match instance.state.seat.cursor_surface.clone() {
+        Some(surface) if surface.is_alive() => surface,
+        Some(_) => {
+            instance.state.seat.cursor_surface = None;
+            instance.state.seat.cursor_hotspot = (0, 0);
+            return Ok(0);
+        }
+        None => return Ok(0),
+    };
+
+    Ok(insert_get_handle(
+        &mut instance.bridge.surfaces,
+        &cursor_surface,
+    ))
+}
+
+fn cursor_hotspot_x<'local>(
+    _env: &mut Env<'local>,
+    _class: JClass<'local>,
+    instance: jlong,
+) -> Result<jint, BridgeError> {
+    let instance = jptr_to_instance!(instance, "cursorHotspotX")?;
+
+    Ok(instance.state.seat.cursor_hotspot.0 as jint)
+}
+
+fn cursor_hotspot_y<'local>(
+    _env: &mut Env<'local>,
+    _class: JClass<'local>,
+    instance: jlong,
+) -> Result<jint, BridgeError> {
+    let instance = jptr_to_instance!(instance, "cursorHotspotY")?;
+
+    Ok(instance.state.seat.cursor_hotspot.1 as jint)
 }
 
 fn keyboard_focus<'local>(

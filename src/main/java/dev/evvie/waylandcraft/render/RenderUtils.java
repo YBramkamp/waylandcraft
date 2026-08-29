@@ -158,6 +158,10 @@ public class RenderUtils {
 		renderType = cutout ? WINDOW_BACKGROUND_CUTOUT : WINDOW_BACKGROUND_TRANSLUCENT;
 		collector.submitCustomGeometry(poseStack, renderType.apply(framebuffer.getTextureLocation()), new FramebufferRenderInstance(origin, spanX, spanY, true));
 	}
+
+	public static void renderTexture(PoseStack poseStack, SubmitNodeCollector collector, Identifier texture, Vec3 origin, Vec3 spanX, Vec3 spanY) {
+		collector.submitCustomGeometry(poseStack, WINDOW_CUTOUT.apply(texture), new FramebufferRenderInstance(origin, spanX, spanY, false));
+	}
 	
 	public static final record FramebufferRenderInstance(Vec3 origin, Vec3 spanX, Vec3 spanY, boolean reverse) implements CustomGeometryRenderer {
 		
@@ -220,6 +224,10 @@ public class RenderUtils {
 	public static void renderFramebuffer2D(GuiGraphicsExtractor context, WindowFramebuffer framebuffer, int x, int y, int w, int h) {
 		if(!framebuffer.isValid()) return;
 		context.blit(framebuffer.getTextureLocation(), x, y, x + w, y + h, 0.0f, 1.0f, 0.0f, 1.0f);
+	}
+
+	public static void renderTexture2D(GuiGraphicsExtractor context, Identifier texture, double x, double y, double w, double h) {
+		context.blit(texture, (int) Math.round(x), (int) Math.round(y), (int) Math.round(x + w), (int) Math.round(y + h), 0.0f, 1.0f, 0.0f, 1.0f);
 	}
 	
 	public static void renderLineStrip(PoseStack poseStack, SubmitNodeCollector collector, Vec3[] points, int color, float width) {

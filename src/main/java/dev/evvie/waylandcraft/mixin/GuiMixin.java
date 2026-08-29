@@ -45,7 +45,10 @@ public class GuiMixin {
 	
 	@Inject(method = "extractCrosshair", at = @At("HEAD"), cancellable = true)
 	public void crosshairExtractCancel(GuiGraphicsExtractor context, DeltaTracker tracker, CallbackInfo info) {
-		if(WaylandCraft.instance.cursorShape == CursorShape.HIDE) info.cancel();
+		if(WaylandCraft.instance.cursorShape == CursorShape.HIDE ||
+				(WaylandCraft.instance.pointerCapture != null && WaylandCraft.instance.pointerCapture.hard)) {
+			info.cancel();
+		}
 	}
 	
 	private @Nullable Identifier crosshairForCursor(@Nullable CursorShape cursor) {
